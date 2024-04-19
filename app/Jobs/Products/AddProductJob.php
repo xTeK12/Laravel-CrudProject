@@ -2,8 +2,10 @@
 
 namespace App\Jobs\Products;
 
+use App\Models\Category;
 use App\Models\Media;
 use App\Models\Product;
+use http\Env\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,15 +18,12 @@ class AddProductJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * Create a new job instance.
+     * @param Request $request
+     * @param int $userId
+     * @param string $path
      */
-
-    private $userId, $path, $request;
-    public function __construct($request, $userId, $path)
+    public function __construct(protected array $request, protected int $userId, protected string $path)
     {
-        $this->userId = $userId;
-        $this->request = $request;
-        $this->path = $path;
         $this->queue = 'products';
     }
 
@@ -33,9 +32,11 @@ class AddProductJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $category = Category::where('name',$this->request['category'])->first();
         $product = new Product();
         $product->fill($this->request);
         $product->ownerID = $this->userId;
+        $product->category_id = $category->id;
         $product->save();
 
         $newMedia = new Media();

@@ -47,11 +47,17 @@
                             {{ $product->quantity }}
                         </div>
                     </div>
+                    <div class="row">
+                        <label for="category" class="col-md-4 col-form-label text-md-end text-start"><strong>Category:</strong></label>
+                        <div class="col-md-6" style="line-height: 35px;">
+                            {{ $product->category->name }}
+                        </div>
+                    </div>
 
                     <div class="row">
                         <label for="price" class="col-md-4 col-form-label text-md-end text-start"><strong>Price:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $product->price }}
+                            {{ $product->price }}€
                         </div>
                     </div>
 
@@ -71,10 +77,13 @@
                     </div>
 
                 </div>
-                <div class="card-footer">
-                    <a href="{{ route('cart.buyProduct', $product->id) }}" class="btn btn-success btn-sm">Buy now</a>
-                    <a href="{{ route('wishlist.addProduct', $product->id) }}" class="btn btn-dark btn-sm"><i class="bi bi-heart"></i> Add to Favorite</a>
-            </div>
+                @if($product->ownerID != auth()->id())
+                    <div class="card-footer">
+                        <a href="{{ route('cart.buyProduct', $product->id) }}" class="btn btn-success btn-sm">Buy now</a>
+                        <a href="{{ route('wishlist.addProduct', $product->id) }}" class="btn btn-danger btn-sm">Add to Favorite</a>
+                        <a href="{{route('offer.create', $product->id)}}" class="btn btn-info btn-sm">Offer</a>
+                    </div>
+                @endif
         </div>
     </div>
 

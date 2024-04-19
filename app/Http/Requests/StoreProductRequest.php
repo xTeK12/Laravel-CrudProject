@@ -26,6 +26,14 @@ class StoreProductRequest extends FormRequest
             'code' => 'required|string|max:50|unique:products,code',
             'name' => 'required|string|max:250',
             'quantity' => 'required|integer|min:1|max:10000',
+            'category' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value == '--Select Category--') {
+                        $fail('Please select a category.');
+                    }
+                },
+            ],
             'price' => 'required',
             'description' => 'nullable|string'
         ];

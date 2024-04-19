@@ -6,11 +6,16 @@ use App\Http\Requests\StoreWishlistRequest;
 use App\Http\Requests\UpdateWishlistRequest;
 use App\Models\Product;
 use App\Models\Wishlist;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class WishlistController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param $userId
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function index($userId)
     {
@@ -19,7 +24,8 @@ class WishlistController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @param $productId
+     * @return RedirectResponse
      */
     public function productToWishlist($productId)
     {
@@ -37,7 +43,8 @@ class WishlistController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param $productId
+     * @return mixed
      */
     public function destroy($productId)
     {

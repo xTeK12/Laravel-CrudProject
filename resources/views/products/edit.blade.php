@@ -54,6 +54,20 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="mb-3 row">
+                            <label for="category" class="col-md-4 col-form-label text-md-end text-start">Category</label>
+                            <div class="col-md-6">
+                                <select class="form-select form-select-lg mb-3" name="category">
+                                    <option>{{ $product->category->name }}</option>
+                                    @foreach($categories as $category)
+                                        <option>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('category'))
+                                    <span class="text-danger">{{ $errors->first('category') }}</span>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="mb-3 row">
                             <label for="price" class="col-md-4 col-form-label text-md-end text-start">Price</label>

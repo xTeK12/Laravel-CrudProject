@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Jobs\Products\AddProductJob;
+use App\Models\Category;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
 use http\Env\Response;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -19,9 +23,9 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
-    public function index() : \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+    public function index()
     {
         return view('products.index', [
             'products' => Product::latest()->paginate(8)
@@ -29,17 +33,18 @@ class ProductController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function dashboardProducts()
     {
+        $categories = Category::all();
         $dashboardProducts = Product::all();
-        return view('dashboard', compact('dashboardProducts'));
+        return view('dashboard', compact('dashboardProducts', 'categories'));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function search(Request $request)
     {
@@ -50,7 +55,25 @@ class ProductController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
+    public function sortCategory(Request $request)
+    {
+        $categories = Category::all();
+        $categoryName = ($request->filled('sort')) ? $request->input('sort') : '';
+
+        if ( empty($categoryName) ) {
+            $dashboardProducts = Product::latest()->paginate(8);
+        } else {
+            $categoryId = Category::where('name', $categoryName)->value('id');
+            $dashboardProducts = Product::where('category_id', $categoryId)->latest()->paginate(8);
+        }
+        return view('dashboard', compact('dashboardProducts', 'categories','categoryName'));
+    }
+
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function searchProduct(Request $request)
     {
@@ -59,22 +82,22 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
-
     /**
-     * Show the form for creating a new resource.
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
-    public function create() : \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+    public function create()
     {
-        return view('products.create');
+        $categories = Category::all();
+        return view('products.create', compact('categories'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param StoreProductRequest $request
+     * @return RedirectResponse
      */
     public function store(StoreProductRequest $request) :RedirectResponse
     {
         $userId = auth()->id();
-
         if($request->hasFile('image')) {
             $file = $request->image;
             $filename = $file->getClientOriginalName();
@@ -91,9 +114,10 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param Product $product
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
-    public function show(Product $product) : \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+    public function show(Product $product)
     {
         return view('products.show', [
             'product' => $product
@@ -101,17 +125,20 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param Product $product
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
-    public function edit(Product $product) : \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+    public function edit(Product $product)
     {
-        return view('products.edit', [
-            'product' => $product
-        ]);
+        $categories = Category::all();
+        return view('products.edit', compact('product', 'categories'));
     }
 
+
     /**
-     * Update the specified resource in storage.
+     * @param UpdateProductRequest $request
+     * @param Product $product
+     * @return RedirectResponse
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
@@ -127,9 +154,9 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param Product $product
+     * @return RedirectResponse
      */
-
     public function destroy(Product $product) : RedirectResponse
     {
         if (! Gate::allows('destroy-product', $product)) {

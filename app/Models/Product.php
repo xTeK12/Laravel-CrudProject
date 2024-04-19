@@ -31,4 +31,12 @@ class Product extends Model
         return $this->hasOne(Media::class, 'product_id', 'id');
     }
 
+    /**
+     * @return HasOne
+     */
+    public function category():HasOne
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id');
+    }
+
 }

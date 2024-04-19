@@ -4,19 +4,23 @@
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @endpush
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
 
     @if($errors->any())
         <div id="message" class="alert alert-danger" role="alert">
             {{ $errors->first() }}
         </div>
     @endif
+
     <div class="container mt-8">
         <div class="row">
+            <form action="{{ route('sortCategory') }}" method="GET" role="sort">
+                <select name="sort" class=" form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Select Category</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->name}}" @if( !empty($categoryName) && $category->name == $categoryName) selected @endif >{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </form>
             @foreach($dashboardProducts->chunk(4) as $chunk)
                 <div class="row no-gutters">
                     @foreach($chunk as $dashboardProduct)
@@ -36,7 +40,7 @@
                                         @endif
                                     </div>
                                     <p class="card-text mb-2 mt-auto">{{ $dashboardProduct->description }}</p>
-                                    <p class="animate-charcter card-text mt-auto">
+                                    <p class="card-text mt-auto">
                                         {{ $dashboardProduct->price }} €</p>
                                     <div class="mt-auto">
                                         <a href="{{ route('cart.buyProduct', $dashboardProduct->id) }}" class="btn btn-primary"><i
@@ -64,6 +68,24 @@
         {
             document.getElementById('message').style.display = 'none';
         }, 3000);
+
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
 
     </script>
 

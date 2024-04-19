@@ -7,11 +7,16 @@ use App\Http\Requests\UpdateCartRequest;
 use App\Models\cart;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class CartController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param $userId
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function index($userId)
     {
@@ -24,6 +29,10 @@ class CartController extends Controller
         return view('cart.index', compact('cartProducts', 'total_price'));
     }
 
+    /**
+     * @param $productId
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
+     */
     public function buyProduct($productId)
     {
         $product = Product::where('id',$productId)->first();
@@ -31,7 +40,8 @@ class CartController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param StoreCartRequest $request
+     * @return mixed
      */
     public function store(StoreCartRequest $request)
     {
@@ -68,9 +78,9 @@ class CartController extends Controller
         }
     }
 
-
     /**
-     * Display the specified resource.
+     * @param $productId
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function show($productId)
     {
@@ -79,7 +89,8 @@ class CartController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param $cartId
+     * @return Application|Factory|View|\Illuminate\Foundation\Application
      */
     public function edit($cartId)
     {
@@ -88,7 +99,8 @@ class CartController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param UpdateCartRequest $request
+     * @return RedirectResponse
      */
     public function update(UpdateCartRequest $request)
     {
@@ -117,11 +129,10 @@ class CartController extends Controller
             ->withSuccess('Cart updated successfully');
     }
 
-
     /**
-     * Remove the specified resource from storage.
+     * @param $cartId
+     * @return RedirectResponse
      */
-
     public function destroy($cartId)
     {
         $cart = Cart::find($cartId);

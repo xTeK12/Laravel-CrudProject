@@ -22,8 +22,10 @@
                     </x-nav-link>
                             @endif
                     @endauth
+
                 </div>
             </div>
+
             @if(request()->is('dashboard', 'search'))
                 <div class="col-md-4 my-auto mt-2">
                     <form action="{{ url('search') }}" method="GET" role="search">
@@ -63,6 +65,9 @@
 
                         <x-dropdown-link :href="route('wishlist.index', auth()->id())">
                             {{ __('My Wishlist') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('offer.index')">
+                            {{ __('My Offers') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->

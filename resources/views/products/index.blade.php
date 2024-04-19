@@ -2,6 +2,10 @@
 
 @section('content')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+@endpush
+
     <div class="row justify-content-center mt-3">
         <div class="col-md-12">
 
@@ -15,7 +19,9 @@
                 <div class="card-header">Product List</div>
                 <div class="card-body">
                     <div class="d-flex flex-row justify-between">
+                        <div>
                     <a href="{{ route('products.create') }}" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Add New Product</a>
+                        </div>
                     <div class="col-md-3">
                         <form action="{{ url('searchProduct') }}" method="GET" role="search">
                             <div class="input-group">
@@ -35,6 +41,7 @@
                             <th scope="col">OwnerID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Quantity</th>
+                            <th scope="col">Category</th>
                             <th scope="col">Price</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -47,6 +54,7 @@
                                 <td>{{$product->ownerID}}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->quantity }}</td>
+                                <td>{{ $product->Category->name }}</td>
                                 <td>{{ $product->price }}</td>
                                 <td>
                                     <form action="{{ route('products.destroy', $product->id) }}" method="post">
@@ -61,8 +69,10 @@
                                         @can('destroy', $product)
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this product?');"><i class="bi bi-trash"></i> Delete</button>
                                         @endcan
-
-                                        <a  href="{{ route('cart.buyProduct', $product->id) }}" class="btn btn-success btn-sm"><i class="bi bi-currency-dollar"></i> Buy</a>
+                                        @if($product->ownerID !== auth()->id())
+                                            <a  href="{{ route('cart.buyProduct', $product->id) }}" class="btn btn-success btn-sm"><i class="bi bi-currency-dollar"></i> Buy</a>
+                                            <a href="{{ route('offer.create', $product->id) }}" class="btn btn-sm btn-info"><i class="bi bi-percent"></i> Offer</a>
+                                        @endif
                                     </form>
 
                                 </td>
