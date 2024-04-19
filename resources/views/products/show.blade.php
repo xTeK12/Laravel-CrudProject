@@ -67,12 +67,6 @@
                             {{ $product->description }}
                         </div>
                     </div>
-                    <div class="row">
-                        <label for="rating" class="col-md-4 col-form-label text-md-end text-start"><strong>Rating:</strong></label>
-                        <div class="col-md-6" style="line-height: 35px;">
-                            {{ $product->rating }}
-                        </div>
-                    </div>
 
                     <div class="row">
                         <label for="media" class="col-md-4 col-form-label text-md-end text-start"><strong>Image:</strong></label>
