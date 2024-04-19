@@ -9,6 +9,9 @@ class Media extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'product_id',
         'path',

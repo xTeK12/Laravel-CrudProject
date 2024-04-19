@@ -21,6 +21,10 @@ class RefundOrderJob implements ShouldQueue
      */
 
     private int $orderId;
+
+    /**
+     * @param $orderId
+     */
     public function __construct($orderId)
     {
         $this->orderId = $orderId;
@@ -28,7 +32,7 @@ class RefundOrderJob implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * @return void
      */
     public function handle(): void
     {
