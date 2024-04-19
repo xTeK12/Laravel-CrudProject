@@ -32,10 +32,12 @@ Route::get('/searchProduct', [ProductController::class, 'searchProduct'])->name(
 // Sort products by category
 Route::get('/sortCategory', [ProductController::class, 'sortCategory'])->name('sortCategory');
 
+//Products Routes
 Route:: resource('products', ProductController::class);
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware(\App\Http\Middleware\ProductsIndex::class);
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(\App\Http\Middleware\ProductsIndex::class);
 Route::get('products/create', [ProductController::class, 'create'])->name('products.create')->middleware(\App\Http\Middleware\ProductsIndex::class);
+
 //Show products on dashboard
 Route::get('/dashboard', [ProductController::class, 'dashboardProducts'])->name('dashboard');
 
@@ -46,7 +48,8 @@ Route::middleware('auth')->group(function () {
 });
 
 //Order Routes
-Route::get('/orders/index/{userId}', [OrderController::class, 'index'])->name('orders.index')->middleware(\App\Http\Middleware\OnlyCurrentUser::class);;
+Route::get('/orders/index/{userId}', [OrderController::class, 'index'])->name('orders.index')->middleware(\App\Http\Middleware\OnlyCurrentUser::class);
+Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
 Route::post('/orders/store', [OrderController::class, 'store'])->name('orders.store');
 Route::delete('/orders/destroy/{orderId}', [OrderController::class, 'destroy'])->name('orders.destroy');
 

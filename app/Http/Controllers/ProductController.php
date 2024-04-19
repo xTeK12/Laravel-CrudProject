@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\Constants;
 use http\Env\Response;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -64,6 +65,7 @@ class ProductController extends Controller
 
         if ( empty($categoryName) ) {
             $dashboardProducts = Product::latest()->paginate(8);
+            return redirect()->route('dashboard');
         } else {
             $categoryId = Category::where('name', $categoryName)->value('id');
             $dashboardProducts = Product::where('category_id', $categoryId)->latest()->paginate(8);

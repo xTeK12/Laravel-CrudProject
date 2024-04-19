@@ -20,10 +20,7 @@
             <div class="card">
                 <div class="card-header"> products List</div>
                 <div class="card-body">
-                    <form action="{{route('orders.store')}}" method="post">
-                        @csrf
-                    <button type="submit" class="btn btn-success btn-sm my-2" onclick="return confirm('Do you want to place this order ?');"><i class="bi bi-plus-circle"></i> Place Order</button>
-                    </form>
+                    <a href="{{ route('orders.create') }}" class="btn btn-success btn-sm mb-2"><i class="bi bi-plus-circle"></i> Place Order</a>
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
@@ -40,7 +37,7 @@
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{$cartProduct->product->name}}</td>
                                 <td>{{$cartProduct->quantity}}</td>
-                                <td>{{$cartProduct->product->price }}</td>
+                                <td>{{$cartProduct->product->price * $cartProduct->quantity }}</td>
                                 <td>
                                     <form action="{{ route('cart.destroy', $cartProduct->id) }}" method="post">
 

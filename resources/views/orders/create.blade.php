@@ -13,63 +13,39 @@
             <div class="card">
                 <div class="card-header">
                     <div class="float-start">
-                        Add {{$product->name}} to Cart
+                        Add order details
                     </div>
                     <div class="float-end">
-                        <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm">&larr; Back</a>
+                        <a href="{{ route('cart.index', auth()->id()) }}" class="btn btn-primary btn-sm">&larr; Back</a>
                     </div>
                 </div>
                 <div class="card-body">
                   <form action="{{ route('orders.store') }}" method="post">
                         @csrf
 
-                      <!-- Code Field -->
-                      <div class="mb-3 row">
-                          <label for="code" class="col-md-4 col-form-label text-md-end text-start">Code</label>
-                          <div class="col-md-6">
-                              <input type="text" class="form-control" id="code" name="code" value="{{ $product->code }}" readonly>
-                          </div>
-                      </div>
-
-                      <!-- Name Field -->
-                      <div class="mb-3 row">
-                          <label for="name" class="col-md-4 col-form-label text-md-end text-start">Name</label>
-                          <div class="col-md-6">
-                              <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" readonly>
-                          </div>
-                      </div>
-
-                      <!-- Quantity Field -->
-                      <div class="mb-3 row">
-                          <label for="quantity" class="col-md-4 col-form-label text-md-end text-start">Quantity({{ $product->quantity }}) </label>
-                          <div class="col-md-6">
-                              <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity') }}" required>
-                              @if ($errors->has('quantity'))
-                                  <span class="text-danger">{{ $errors->first('quantity') }}</span>
+                          <div class="form-group mb-2">
+                              <label for="inputAddress">Address</label>
+                              <input type="text" class="form-control" id="inputAddress" @error('adress') is-invalid @enderror placeholder="1234 Main St" name="adress" value="{{ old('adress') }}">
+                              @if ($errors->has('adress'))
+                                  <span class="text-danger">{{ $errors->first('adress') }}</span>
                               @endif
                           </div>
-                      </div>
-
-                      <!-- Price Field -->
-                      <div class="mb-3 row">
-                          <label for="price" class="col-md-4 col-form-label text-md-end text-start">Price</label>
-                          <div class="col-md-6">
-                              <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ $product->price }}" readonly>
+                          <div class="form-group">
+                              <div class="form-check">
+                                  @foreach($payments as $payment)
+                                      <div>
+                                          <input class="form-check-input" type="checkbox" @error('payment') is-invalid @enderror name ="payment" onclick="uncheckAndCheck(event)" value="{{ $payment }}">
+                                          @if ($errors->has('payment'))
+                                              <span class="text-danger">{{ $errors->first('payment') }}</span>
+                                          @endif
+                                          <label class="form-check-label" for="gridCheck">
+                                              {{$payment}}
+                                          </label>
+                                      </div>
+                                  @endforeach
+                              </div>
                           </div>
-                      </div>
-
-                      <!-- Description Field -->
-                      <div class="mb-3 row">
-                          <label for="description" class="col-md-4 col-form-label text-md-end text-start">Description</label>
-                          <div class="col-md-6">
-                              <textarea class="form-control" id="description" name="description" readonly>{{ $product->description }}</textarea>
-                          </div>
-                      </div>
-
-                      <div class="mb-3 row">
-                            <input type="submit" class="col-md-3 offset-md-5 btn btn-success" value="Buy Product">
-                        </div>
-
+                          <button type="submit" class="btn btn-primary">Place Order</button>
                     </form>
                 </div>
             </div>
@@ -80,6 +56,15 @@
         {
             document.getElementById('message').style.display = 'none';
         }, 3000);
+
+        function uncheckAndCheck(event)
+        {
+            document.querySelectorAll( "input[type='checkbox'][name^='payment']" ).forEach( checkbox => {
+                checkbox.checked = false;
+            });
+
+            event.target.checked = true;
+        }
     </script>
 
 

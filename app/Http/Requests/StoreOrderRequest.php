@@ -17,10 +17,9 @@ class StoreOrderRequest extends FormRequest
 
     public function rules(): array
     {
-//        $product =
-//        $maxQuantity = $product->quantity;
         return [
-//            'quantity' => "required|integer|min:1|max:$maxQuantity",
+            'adress' => 'required',
+            'payment' => 'required'
         ];
     }
 }

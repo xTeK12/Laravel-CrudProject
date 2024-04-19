@@ -36,7 +36,11 @@
                                             <li class="list-group-item">Price: {{ $orderDetail->productDetails->price }}€</li>
                                         </ul>
                                     @endforeach
-                                        <div class="card-footer d-flex flex-row gap-2"><p class="text-primary">Total cost:</p> {{$userOrder->total_order_price}}€</div>
+                                        <div class="card-footer d-flex flex-col gap-1">
+                                            <strong>Total cost: {{$userOrder->total_order_price}}€</strong>
+                                            <strong>Address: {{ $orderDetail->adress }}</strong>
+                                            <strong>Payment: {{ $orderDetail->payment }}</strong>
+                                        </div>
                                 </div>
                             </div>
 
